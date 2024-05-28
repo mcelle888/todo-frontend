@@ -22,3 +22,18 @@ export const getAllLists = async (): Promise<ToDoList[]> => {
   const data = await response.json();
   return data;
 };
+
+export const createNewList = async (title: string): Promise<ToDoList> => {
+  const response = await fetch(baseUrl + "/todo", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title })
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create new list');
+  }
+  const data = await response.json();
+  return data;
+};
