@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import styles from './Modal.module.scss';
 
 interface ModalProps {
   buttonText: string;
-  children: (close: () => void) => React.ReactNode;
+  children: (close: () => void) => ReactNode;  
   size: 'small' | 'medium' | 'large';
 }
 

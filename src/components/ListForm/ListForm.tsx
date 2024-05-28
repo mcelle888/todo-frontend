@@ -11,8 +11,8 @@ const ListForm: React.FC<ListFormProps> = ({ onSubmit, closeModal }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(title);
-    setTitle('');  
-    closeModal();  
+    setTitle(''); 
+    closeModal(); 
   };
 
   return (

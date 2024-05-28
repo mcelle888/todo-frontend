@@ -3,6 +3,7 @@ export interface ToDoItem {
   name: string;
   description: string;
   dueDate: string;
+  done: boolean;  
 }
 
 export interface ToDoList {
@@ -36,4 +37,13 @@ export const createNewList = async (title: string): Promise<ToDoList> => {
   }
   const data = await response.json();
   return data;
+};
+
+export const deleteList = async (id: number): Promise<void> => {
+  const response = await fetch(`${baseUrl}/todo/${id}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete list');
+  }
 };
