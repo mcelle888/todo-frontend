@@ -1,19 +1,15 @@
-import React, { useState, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import styles from './Modal.module.scss';
 
 interface ModalProps {
-  buttonText: string;
-  children: (close: () => void) => ReactNode;  
+  buttonText?: string;
+  children: (close: () => void) => ReactNode;
   size: 'small' | 'medium' | 'large';
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ buttonText, children, size }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
+const Modal: React.FC<ModalProps> = ({ buttonText, children, size, isOpen, onClose }) => {
   const sizes = {
     small: `${styles.smallModal}`,
     medium: `${styles.mediumModal}`,
@@ -24,15 +20,17 @@ const Modal: React.FC<ModalProps> = ({ buttonText, children, size }) => {
 
   return (
     <>
-      <button className={styles.modalButton} onClick={toggleModal}>
-        {buttonText}
-      </button>
+      {buttonText && (
+        <button className={styles.modalButton} onClick={onClose}>
+          {buttonText}
+        </button>
+      )}
       {isOpen && (
         <dialog className={modalClass} open>
-          <button onClick={toggleModal} className={styles.closeDialog}>
+          <button onClick={onClose} className={styles.closeDialog}>
             X
           </button>
-          <div>{children(toggleModal)}</div>
+          <div>{children(onClose)}</div>
         </dialog>
       )}
     </>

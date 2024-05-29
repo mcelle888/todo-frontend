@@ -8,6 +8,9 @@ import style from './LandingPage.module.scss';
 
 const LandingPage: React.FC = () => {
   const [lists, setLists] = useState<any[]>([]);
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -22,10 +25,11 @@ const LandingPage: React.FC = () => {
     fetchLists();
   }, []);
 
-  const handleSubmitList = async (title: string) => {
+  const handleSubmitList = async (title: string, closeModal: () => void) => {
     try {
       const newList = await createNewList(title);
       setLists([...lists, newList]);
+      closeModal();
     } catch (e) {
       console.error("Failed to create new list", e);
     }
@@ -40,31 +44,44 @@ const LandingPage: React.FC = () => {
     }
   };
 
-  const handleAddItem = async (listId: number, data: { name: string; description: string; dueDate: string }) => {
+  const handleAddItem = async (listId: number, data: { name: string; description: string; dueDate: string }, closeModal: () => void) => {
     try {
       const newItem = await addItemToList(listId, data);
       setLists(lists.map(list => list.id === listId ? { ...list, items: [...list.items, newItem] } : list));
+      closeModal();
     } catch (e) {
       console.error("Failed to add item to list", e);
     }
   };
 
+  const openItemModal = (listId: number) => {
+    setSelectedListId(listId);
+    setIsItemModalOpen(true);
+  };
+
   return (
     <div>
       <h2>To-Do Lists</h2>
-      <Modal buttonText="Create New List" size="medium">
-        {(closeModal) => <ListForm onSubmit={(title: string) => { handleSubmitList(title); closeModal(); }} closeModal={closeModal} />}
+      <button onClick={() => setIsListModalOpen(true)}>Create New List</button>
+      <Modal isOpen={isListModalOpen} size="medium" onClose={() => setIsListModalOpen(false)}>
+        {(closeModal) => (
+          <ListForm onSubmit={(title: string) => handleSubmitList(title, closeModal)} closeModal={closeModal} />
+        )}
       </Modal>
       <div className={style.listContainer}>
         {lists.map((list) => (
           <div key={list.id}>
-            <ListCard list={list} onDelete={handleDelete} />
-            <Modal buttonText="Add Item" size="small">
-              {(closeModal) => <ItemForm onSubmit={(data) => { handleAddItem(list.id, data); closeModal(); }} />}
-            </Modal>
+            <ListCard list={list} onDelete={handleDelete} onOpenItemModal={() => openItemModal(list.id)} />
           </div>
         ))}
       </div>
+      {selectedListId && (
+        <Modal isOpen={isItemModalOpen} size="small" onClose={() => setIsItemModalOpen(false)}>
+          {(closeModal) => (
+            <ItemForm onSubmit={(data) => handleAddItem(selectedListId, data, closeModal)} />
+          )}
+        </Modal>
+      )}
     </div>
   );
 };

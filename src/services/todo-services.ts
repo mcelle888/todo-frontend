@@ -66,3 +66,19 @@ export const addItemToList = async (listId: number, data: {name: string, descrip
   const item = await response.json();
   return item;
 }
+
+//edit an item in a list
+export const updateItemInList = async (listId: number, itemId: number, data: { name: string; description: string; dueDate: string }): Promise<ToDoItem> => {
+  const response = await fetch(`${baseUrl}/todo/${listId}/items/${itemId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update item in list');
+  }
+  const item = await response.json();
+  return item;
+};
