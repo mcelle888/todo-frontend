@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 interface ListFormProps {
   onSubmit: (title: string) => void;
   closeModal: () => void;
+  defaultTitle?: string;
 }
 
-const ListForm: React.FC<ListFormProps> = ({ onSubmit, closeModal }) => {
-  const [title, setTitle] = useState('');
+const ListForm: React.FC<ListFormProps> = ({ onSubmit, closeModal, defaultTitle = '' }) => {
+  const [title, setTitle] = useState(defaultTitle);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

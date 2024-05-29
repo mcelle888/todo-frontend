@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllLists, createNewList, deleteList, addItemToList } from '../../services/todo-services';
+import { getAllLists, createNewList, deleteList, addItemToList, updateListTitle } from '../../services/todo-services';
 import ListCard from '../../components/ListCard/ListCard';
 import Modal from '../../containers/Modal/Modal';
 import ListForm from '../../components/ListForm/ListForm';
@@ -54,6 +54,16 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleUpdateTitle = async (listId: number, title: string, closeModal: () => void) => {
+    try {
+      const updatedList = await updateListTitle(listId, title);
+      setLists(lists.map(list => list.id === listId ? { ...list, title: updatedList.title } : list));
+      closeModal();
+    } catch (e) {
+      console.error("Failed to update list title", e);
+    }
+  };
+
   const openItemModal = (listId: number) => {
     setSelectedListId(listId);
     setIsItemModalOpen(true);
@@ -71,7 +81,7 @@ const LandingPage: React.FC = () => {
       <div className={style.listContainer}>
         {lists.map((list) => (
           <div key={list.id}>
-            <ListCard list={list} onDelete={handleDelete} onOpenItemModal={() => openItemModal(list.id)} />
+            <ListCard list={list} onDelete={handleDelete} onOpenItemModal={() => openItemModal(list.id)} onUpdateTitle={handleUpdateTitle} />
           </div>
         ))}
       </div>

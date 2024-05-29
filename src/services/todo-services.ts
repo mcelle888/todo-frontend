@@ -41,6 +41,23 @@ export const createNewList = async (title: string): Promise<ToDoList> => {
   return data;
 };
 
+// edit list
+
+export const updateListTitle = async (id: number, title: string): Promise<ToDoList> => {
+  const response = await fetch(`${baseUrl}/todo/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update list title');
+  }
+  const data = await response.json();
+  return data;
+};
+
 // delete a list
 export const deleteList = async (id: number): Promise<void> => {
   const response = await fetch(`${baseUrl}/todo/${id}`, {
@@ -81,4 +98,15 @@ export const updateItemInList = async (listId: number, itemId: number, data: { n
   }
   const item = await response.json();
   return item;
+};
+
+// delete an item in a list
+
+export const deleteItemFromList = async (listId: number, itemId: number): Promise<void> => {
+  const response = await fetch(`${baseUrl}/todo/${listId}/items/${itemId}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete item from list');
+  }
 };

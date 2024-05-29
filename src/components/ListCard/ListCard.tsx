@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { ToDoItem, updateItemInList } from '../../services/todo-services';
+import React, { useState, useEffect } from 'react';
+import { ToDoItem, updateItemInList, deleteItemFromList, updateListTitle } from '../../services/todo-services';
 import Modal from '../../containers/Modal/Modal';
 import ItemForm from '../ItemForm/ItemForm';
+import ListForm from '../ListForm/ListForm';
 import styles from './ListCard.module.scss';
+import dayjs from 'dayjs';
 
 interface ListCardProps {
   list: {
@@ -12,19 +14,26 @@ interface ListCardProps {
   };
   onDelete: (id: number) => void;
   onOpenItemModal: () => void;
+  onUpdateTitle: (listId: number, title: string, closeModal: () => void) => void;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal }) => {
+const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, onUpdateTitle }) => {
   const [selectedItem, setSelectedItem] = useState<ToDoItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
+  const [items, setItems] = useState<ToDoItem[]>(list.items);
+
+  useEffect(() => {
+    setItems(list.items);
+  }, [list.items]);
 
   const handleDelete = () => {
     onDelete(list.id);
   };
 
-  const handleEdit = (item: ToDoItem) => {
+  const handleEditItem = (item: ToDoItem) => {
     setSelectedItem(item);
-    setIsModalOpen(true);
+    setIsItemModalOpen(true);
   };
 
   const handleUpdateItem = async (data: { name: string; description: string; dueDate: string }, closeModal: () => void) => {
@@ -32,8 +41,8 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal }) 
       try {
         const updatedItem = await updateItemInList(list.id, selectedItem.id, data);
         setSelectedItem(null);
-        setIsModalOpen(false);
-        list.items = list.items.map(item => item.id === selectedItem.id ? updatedItem : item);
+        setIsItemModalOpen(false);
+        setItems(items.map(item => item.id === selectedItem.id ? updatedItem : item));
         closeModal();
       } catch (e) {
         console.error("Failed to update item", e);
@@ -41,8 +50,38 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal }) 
     }
   };
 
+  const handleDeleteItem = async (itemId: number) => {
+    try {
+      await deleteItemFromList(list.id, itemId);
+      setItems(items.filter(item => item.id !== itemId));
+    } catch (e) {
+      console.error("Failed to delete item", e);
+    }
+  };
+
+  const handleUpdateTitle = async (title: string, closeModal: () => void) => {
+    try {
+      const updatedList = await updateListTitle(list.id, title);
+      list.title = updatedList.title;
+      setIsTitleModalOpen(false);
+      closeModal();
+    } catch (e) {
+      console.error("Failed to update list title", e);
+    }
+  };
+
+  const handleToggleDone = async (item: ToDoItem) => {
+    const updatedItem = { ...item, done: !item.done };
+    try {
+      await updateItemInList(list.id, item.id, updatedItem);
+      setItems(items.map(i => (i.id === item.id ? updatedItem : i)));
+    } catch (e) {
+      console.error("Failed to update item status", e);
+    }
+  };
+
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsItemModalOpen(false);
     setSelectedItem(null);
   };
 
@@ -50,17 +89,24 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal }) 
     <div key={list.id} className={styles.listCard}>
       <h3>{list.title}</h3>
       <button onClick={handleDelete}>Delete List</button>
+      <button onClick={() => setIsTitleModalOpen(true)}>Edit Title</button>
       <button onClick={onOpenItemModal}>Add Item</button>
       <ul>
-        {list.items.map((item) => (
+        {items.map((item) => (
           <li key={item.id} className={item.done ? styles.done : ''}>
-            {item.name}: {item.description} (Due: {new Date(item.dueDate).toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' })})
-            <button onClick={() => handleEdit(item)}>Edit</button>
+            <input
+              type="checkbox"
+              checked={item.done}
+              onChange={() => handleToggleDone(item)}
+            />
+            {item.name}: {item.description} (Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')})
+            <button onClick={() => handleEditItem(item)}>Edit</button>
+            <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
           </li>
         ))}
       </ul>
-      {isModalOpen && selectedItem && (
-        <Modal size="small" isOpen={isModalOpen} onClose={closeModal}>
+      {isItemModalOpen && selectedItem && (
+        <Modal size="small" isOpen={isItemModalOpen} onClose={closeModal}>
           {(closeModal) => (
             <ItemForm
               mode="Edit"
@@ -72,8 +118,20 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal }) 
           )}
         </Modal>
       )}
+      {isTitleModalOpen && (
+        <Modal size="small" isOpen={isTitleModalOpen} onClose={() => setIsTitleModalOpen(false)}>
+          {(closeModal) => (
+            <ListForm
+              onSubmit={(title) => handleUpdateTitle(title, closeModal)}
+              closeModal={closeModal}
+              defaultTitle={list.title}
+            />
+          )}
+        </Modal>
+      )}
     </div>
   );
 };
 
 export default ListCard;
+
