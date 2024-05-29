@@ -5,6 +5,8 @@ import ItemForm from '../ItemForm/ItemForm';
 import ListForm from '../ListForm/ListForm';
 import styles from './ListCard.module.scss';
 import dayjs from 'dayjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePen, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 interface ListCardProps {
   list: {
@@ -17,7 +19,7 @@ interface ListCardProps {
   onUpdateTitle: (listId: number, title: string, closeModal: () => void) => void;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, onUpdateTitle }) => {
+const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) => {
   const [selectedItem, setSelectedItem] = useState<ToDoItem | null>(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
@@ -87,24 +89,47 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, on
 
   return (
     <div key={list.id} className={styles.listCard}>
-      <h3>{list.title}</h3>
-      <button onClick={handleDelete}>Delete List</button>
-      <button onClick={() => setIsTitleModalOpen(true)}>Edit Title</button>
-      <button onClick={onOpenItemModal}>Add Item</button>
-      <ul>
+      
+      <div className={styles.cardHeader}>
+        <div className={styles.titleBox}>
+        <h3>{list.title}</h3>
+        <button className={styles.iconButtons} onClick={() => setIsTitleModalOpen(true)}>
+          <FontAwesomeIcon icon={faSquarePen} />
+        </button>
+      </div>
+        <button className={styles.deleteButton} onClick={handleDelete}>
+          <FontAwesomeIcon icon={faTrashCan} />
+        </button>
+      </div>
+      <ul className={styles.itemList}>
         {items.map((item) => (
           <li key={item.id} className={item.done ? styles.done : ''}>
-            <input
-              type="checkbox"
-              checked={item.done}
-              onChange={() => handleToggleDone(item)}
-            />
-            {item.name}: {item.description} (Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')})
-            <button onClick={() => handleEditItem(item)}>Edit</button>
-            <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+            <div className={styles.itemBox}>
+              <input
+                className={styles.checkBox}
+                type="checkbox"
+                checked={item.done}
+                onChange={() => handleToggleDone(item)}
+              />
+              <div>
+                <p>{item.name}:</p>
+                <p className={styles.description}>{item.description}</p>
+                  <div className={styles.dateContainer}>Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')}</div>
+              </div>
+            </div>
+          
+            <div className={styles.itemButtons}>
+              <button className={styles.iconButtons} onClick={() => handleEditItem(item)}>
+                <FontAwesomeIcon icon={faSquarePen} />
+              </button>
+              <button className={styles.deleteButton} onClick={() => handleDeleteItem(item.id)}>
+                <FontAwesomeIcon icon={faTrashCan} />
+              </button>
+            </div>
           </li>
         ))}
       </ul>
+      <button className={styles.addItemButton} onClick={onOpenItemModal}>Add Item</button>
       {isItemModalOpen && selectedItem && (
         <Modal size="small" isOpen={isItemModalOpen} onClose={closeModal}>
           {(closeModal) => (
@@ -134,4 +159,3 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, on
 };
 
 export default ListCard;
-

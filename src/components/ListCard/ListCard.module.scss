@@ -1,3 +1,116 @@
 .done {
   text-decoration: line-through;
 }
+
+.listCard {
+  display: flex;
+  flex-direction: column;
+  width: 25rem;
+  min-height: 30rem;
+  border: 5px solid white;
+  border-radius: 10px;
+  background-color: #e5e5f7;
+  opacity: 0.8;
+  background-size: 20px 20px;
+  background-image:  repeating-linear-gradient(0deg, #a0a3a7, #9b9bb1 1px, #e5e5f7 1px, #e5e5f7);
+  
+  
+}
+
+h3 {
+  text-align: center;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteButton {
+      height: 2.5rem;
+      width: 2.5rem;
+      background-color: rgb(180, 104, 104);
+      border-width: 2px;
+      &:hover {
+        border-color: black;
+      }
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  list-style-type: none;
+}
+
+li {
+  margin: 0.1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.addItemButton {
+  width: 60%;
+  align-self: center;
+  margin-top: 2rem;
+  &:hover {
+    background-color:rgb(112, 142, 150);
+    border-color: black;
+  }
+}
+
+.dateContainer {
+  margin: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.checkBox {
+  margin-left: -1rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.itemBox {
+  display: flex;
+  gap: 1rem;
+}
+
+.itemButtons {
+  display: flex;
+  justify-content: space-around;
+    & button {
+      height: 2rem;
+      font-size: 0.7rem;
+  }
+  gap: 1rem;
+  align-self: center;
+}
+
+.description {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.titleBox {
+  display: flex;
+  margin-left: 3rem;
+  gap: 1rem;
+  & button {
+    height: 70%;
+    align-self: center;
+  }
+}
+
+.iconButtons:hover {
+  border-color: black;
+}
+
+.iconButtons {
+    border-width: 2px;
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './ListForm.module.scss'
 
 interface ListFormProps {
   onSubmit: (title: string) => void;
@@ -17,7 +18,7 @@ const ListForm: React.FC<ListFormProps> = ({ onSubmit, closeModal, defaultTitle 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles.listForm} onSubmit={handleSubmit}>
       <label>
         Title:
         <input
@@ -27,7 +28,7 @@ const ListForm: React.FC<ListFormProps> = ({ onSubmit, closeModal, defaultTitle 
           required
         />
       </label>
-      <button type="submit">Save</button>
+      <button className={styles.createListButton} type="submit">Create List</button>
     </form>
   );
 };

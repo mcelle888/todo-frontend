@@ -1,0 +1,16 @@
+.listForm {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+.createListButton {
+color: white;
+background-color: rgb(112, 142, 150);
+border-color: white;
+    &:hover {
+        background-color:rgba(110, 77, 76) ;
+    }
+       
+}
