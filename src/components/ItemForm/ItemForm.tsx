@@ -24,7 +24,7 @@ interface ItemFormProps {
   onSubmit: SubmitHandler<FormData>;
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({ mode = "Add", defaultValues, onSubmit }) => {
+const ItemForm: React.FC<ItemFormProps> = ({ mode = "Create", defaultValues, onSubmit }) => {
   const {
     register,
     formState: { errors },
@@ -36,7 +36,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ mode = "Add", defaultValues, onSubm
 
   return (
     <form className={styles.itemForm} onSubmit={handleSubmit(onSubmit)}>
-      <h4>{mode} an Item</h4>
+      <h4>{mode === "Create" ? "Add an Item" : "Edit an Item"}</h4>
       <div className={styles.field}>
         <label>Name</label>
         <input className={errors.name ? styles.input_error : ''} type="text" {...register("name")} />
@@ -53,7 +53,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ mode = "Add", defaultValues, onSubm
         <small className={styles.error_text}>{errors?.dueDate?.message ?? "\u00A0"}</small>
       </div>
       <div className={styles.field}>
-        <button className={styles.createItemButton} type="submit">{mode} Item</button>
+        <button className={styles.createItemButton} type="submit">{mode === "Create" ? "Add Item" : "Edit Item"}</button>
       </div>
     </form>
   );

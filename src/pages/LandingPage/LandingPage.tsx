@@ -8,7 +8,6 @@ import style from './LandingPage.module.scss';
 
 const LandingPage: React.FC = () => {
   const [lists, setLists] = useState<ToDoList[]>([]);
-  const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
@@ -111,8 +110,8 @@ const LandingPage: React.FC = () => {
     setIsItemModalOpen(true);
   };
 
-  const openTitleModal = (listId: number) => {
-    setSelectedListId(listId);
+  const openTitleModal = (listId: number | null, _title: string = '') => {
+    setSelectedListId(listId);  
     setIsTitleModalOpen(true);
   };
 
@@ -122,34 +121,38 @@ const LandingPage: React.FC = () => {
         <h2>To-Do List &#x1f5d2;</h2>
       </header>
       <div className={style.addListBox}>
-        <button onClick={() => setIsListModalOpen(true)}>Create New List +</button>
+        <button onClick={() => openTitleModal(null)}>Create New List +</button>
       </div>
-      {/* Opens modal to add new list */}
-      <Modal isOpen={isListModalOpen} size="medium" onClose={() => setIsListModalOpen(false)}>
+
+      {/* modal for creating and editing list titles */}
+      <Modal isOpen={isTitleModalOpen} size="medium" onClose={() => setIsTitleModalOpen(false)}>
         {(closeModal) => (
-          <ListForm onSubmit={(title: string) => handleSubmitList(title, closeModal)} closeModal={closeModal} />
+          <ListForm
+            mode={selectedListId === null ? 'Create' : 'Edit'}
+            defaultTitle={selectedListId === null ? '' : lists.find(list => list.id === selectedListId)?.title || ''}
+            onSubmit={(title: string) => {
+              if (selectedListId === null) {
+                handleSubmitList(title, closeModal);
+              } else {
+                handleUpdateTitle(title, closeModal);
+              }
+            }}
+            closeModal={closeModal}
+          />
         )}
       </Modal>
-      {/* Opens modal to edit item on list */}
+
+      {/* modal for creating and editing items */}
       <Modal isOpen={isItemModalOpen} size="small" onClose={() => setIsItemModalOpen(false)}>
         {(closeModal) => (
           <ItemForm
-            mode="Edit"
+            mode={selectedItem ? "Edit" : "Create"}
             defaultValues={selectedItem || { name: '', description: '', dueDate: '' }}
             onSubmit={(data) => handleUpdateItem(data, closeModal)}
           />
         )}
       </Modal>
-      {/* opens modal to update title of list */}
-      <Modal isOpen={isTitleModalOpen} size="medium" onClose={() => setIsTitleModalOpen(false)}>
-        {(closeModal) => (
-          <ListForm
-            defaultTitle={lists.find(list => list.id === selectedListId)?.title || ''}
-            onSubmit={(title: string) => handleUpdateTitle(title, closeModal)}
-            closeModal={closeModal}
-          />
-        )}
-      </Modal>
+
       <div className={style.listContainer}>
         {lists.map((list) => (
           <ListCard
@@ -157,7 +160,7 @@ const LandingPage: React.FC = () => {
             list={list}
             onDelete={handleDelete}
             onOpenItemModal={(item) => openItemModal(list.id, item)}
-            onOpenTitleModal={() => openTitleModal(list.id)}
+            onOpenTitleModal={() => openTitleModal(list.id, list.title)}
             onToggleDone={handleToggleDone}
             onDeleteItem={handleDeleteItem}
           />
