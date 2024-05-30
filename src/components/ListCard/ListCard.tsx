@@ -19,7 +19,7 @@ interface ListCardProps {
   onUpdateTitle: (listId: number, title: string, closeModal: () => void) => void;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) => {
+const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, onUpdateTitle }) => {
   const [selectedItem, setSelectedItem] = useState<ToDoItem | null>(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
@@ -45,7 +45,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
         setSelectedItem(null);
         setIsItemModalOpen(false);
         setItems(items.map(item => item.id === selectedItem.id ? updatedItem : item));
-        closeModal();
+        onUpdateTitle(list.id, list.title, closeModal);   
       } catch (e) {
         console.error("Failed to update item", e);
       }
@@ -56,6 +56,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
     try {
       await deleteItemFromList(list.id, itemId);
       setItems(items.filter(item => item.id !== itemId));
+      onUpdateTitle(list.id, list.title, () => {});   
     } catch (e) {
       console.error("Failed to delete item", e);
     }
@@ -66,7 +67,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
       const updatedList = await updateListTitle(list.id, title);
       list.title = updatedList.title;
       setIsTitleModalOpen(false);
-      closeModal();
+      onUpdateTitle(list.id, title, closeModal);  
     } catch (e) {
       console.error("Failed to update list title", e);
     }
@@ -77,6 +78,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
     try {
       await updateItemInList(list.id, item.id, updatedItem);
       setItems(items.map(i => (i.id === item.id ? updatedItem : i)));
+      onUpdateTitle(list.id, list.title, () => {});   
     } catch (e) {
       console.error("Failed to update item status", e);
     }
@@ -89,14 +91,13 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
 
   return (
     <div key={list.id} className={styles.listCard}>
-      
       <div className={styles.cardHeader}>
         <div className={styles.titleBox}>
-        <h3>{list.title}</h3>
-        <button className={styles.iconButtons} onClick={() => setIsTitleModalOpen(true)}>
-          <FontAwesomeIcon icon={faSquarePen} />
-        </button>
-      </div>
+          <h3>{list.title}</h3>
+          <button className={styles.iconButtons} onClick={() => setIsTitleModalOpen(true)}>
+            <FontAwesomeIcon icon={faSquarePen} />
+          </button>
+        </div>
         <button className={styles.deleteButton} onClick={handleDelete}>
           <FontAwesomeIcon icon={faTrashCan} />
         </button>
@@ -114,10 +115,9 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
               <div>
                 <p>{item.name}:</p>
                 <p className={styles.description}>{item.description}</p>
-                  <div className={styles.dateContainer}>Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')}</div>
+                <div className={styles.dateContainer}>Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')}</div>
               </div>
             </div>
-          
             <div className={styles.itemButtons}>
               <button className={styles.iconButtons} onClick={() => handleEditItem(item)}>
                 <FontAwesomeIcon icon={faSquarePen} />
@@ -144,7 +144,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal}) =
         </Modal>
       )}
       {isTitleModalOpen && (
-        <Modal size="small" isOpen={isTitleModalOpen} onClose={() => setIsTitleModalOpen(false)}>
+        <Modal size="medium" isOpen={isTitleModalOpen} onClose={() => setIsTitleModalOpen(false)}>
           {(closeModal) => (
             <ListForm
               onSubmit={(title) => handleUpdateTitle(title, closeModal)}

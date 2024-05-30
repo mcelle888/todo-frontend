@@ -75,10 +75,8 @@ const LandingPage: React.FC = () => {
         <h2>To-Do List &#x1f5d2;</h2>
       </header>
       <div className={style.addListBox}>
-          <button onClick={() => setIsListModalOpen(true)}>Create New List +</button>
+        <button onClick={() => setIsListModalOpen(true)}>Create New List +</button>
       </div>
-     
-  
       <Modal isOpen={isListModalOpen} size="medium" onClose={() => setIsListModalOpen(false)}>
         {(closeModal) => (
           <ListForm onSubmit={(title: string) => handleSubmitList(title, closeModal)} closeModal={closeModal} />
