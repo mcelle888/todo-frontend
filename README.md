@@ -10,3 +10,7 @@ A simple react to do list application!
 ## Tech stack
 
 ## Improvements
+
+## Change Log
+
+03/06/2024 {Bugfix and breaking down components}

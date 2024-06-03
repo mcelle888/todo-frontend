@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ToDoItem } from '../../services/todo-services';
-import dayjs from 'dayjs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquarePen, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import styles from './ListCard.module.scss';
+import React, { useState, useEffect } from "react";
+import { ToDoItem } from "../../services/todo-services";
+import dayjs from "dayjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquarePen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import styles from "./ListCard.module.scss";
 
 interface ListCardProps {
   list: {
@@ -18,7 +18,14 @@ interface ListCardProps {
   onDeleteItem: (itemId: number) => void;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, onOpenTitleModal, onToggleDone, onDeleteItem }) => {
+const ListCard: React.FC<ListCardProps> = ({
+  list,
+  onDelete,
+  onOpenItemModal,
+  onOpenTitleModal,
+  onToggleDone,
+  onDeleteItem,
+}) => {
   const [items, setItems] = useState<ToDoItem[]>(list.items);
 
   useEffect(() => {
@@ -44,7 +51,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, on
       </div>
       <ul className={styles.itemList}>
         {items.map((item) => (
-          <li key={item.id} className={item.done ? styles.done : ''}>
+          <li key={item.id} className={item.done ? styles.done : ""}>
             <div className={styles.itemBox}>
               <input
                 className={styles.checkBox}
@@ -55,21 +62,34 @@ const ListCard: React.FC<ListCardProps> = ({ list, onDelete, onOpenItemModal, on
               <div>
                 <p>{item.name}:</p>
                 <p className={styles.description}>{item.description}</p>
-                <div className={styles.dateContainer}>Due: {dayjs(item.dueDate).format('dddd, MMMM D, YYYY h:mm A')}</div>
+                <div className={styles.dateContainer}>
+                  Due: {dayjs(item.dueDate).format("dddd, MMMM D, YYYY h:mm A")}
+                </div>
               </div>
             </div>
             <div className={styles.itemButtons}>
-              <button className={styles.iconButtons} onClick={() => onOpenItemModal(item)}>
+              <button
+                className={styles.iconButtons}
+                onClick={() => onOpenItemModal(item)}
+              >
                 <FontAwesomeIcon icon={faSquarePen} />
               </button>
-              <button className={styles.deleteButton} onClick={() => onDeleteItem(item.id)}>
+              <button
+                className={styles.deleteButton}
+                onClick={() => onDeleteItem(item.id)}
+              >
                 <FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>
           </li>
         ))}
       </ul>
-      <button className={styles.addItemButton} onClick={() => onOpenItemModal(null)}>Add Item</button>
+      <button
+        className={styles.addItemButton}
+        onClick={() => onOpenItemModal(null)}
+      >
+        Add Item
+      </button>
     </div>
   );
 };

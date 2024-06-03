@@ -1,15 +1,21 @@
-import React, { ReactNode } from 'react';
-import styles from './Modal.module.scss';
+import React, { ReactNode } from "react";
+import styles from "./Modal.module.scss";
 
 interface ModalProps {
   buttonText?: string;
   children: (close: () => void) => ReactNode;
-  size: 'small' | 'medium' | 'large';
+  size: "small" | "medium" | "large";
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ buttonText, children, size, isOpen, onClose }) => {
+const Modal: React.FC<ModalProps> = ({
+  buttonText,
+  children,
+  size,
+  isOpen,
+  onClose,
+}) => {
   const sizes = {
     small: `${styles.smallModal}`,
     medium: `${styles.mediumModal}`,
