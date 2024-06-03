@@ -24,11 +24,7 @@ interface ItemFormProps {
   onSubmit: SubmitHandler<FormData>;
 }
 
-const ItemForm: React.FC<ItemFormProps> = ({
-  mode = "Create",
-  defaultValues,
-  onSubmit,
-}) => {
+const ItemForm: React.FC<ItemFormProps> = ({ mode = "Create", defaultValues, onSubmit }) => {
   const {
     register,
     formState: { errors },
@@ -43,37 +39,21 @@ const ItemForm: React.FC<ItemFormProps> = ({
       <h4>{mode === "Create" ? "Add an Item" : "Edit an Item"}</h4>
       <div className={styles.field}>
         <label>Name</label>
-        <input
-          className={errors.name ? styles.input_error : ""}
-          type="text"
-          {...register("name")}
-        />
-        <small className={styles.error_text}>
-          {errors?.name?.message ?? "\u00A0"}
-        </small>
+        <input className={errors.name ? styles.input_error : ''} type="text" {...register("name")} />
+        <small className={styles.error_text}>{errors?.name?.message ?? "\u00A0"}</small>
       </div>
       <div className={styles.field}>
         <label>Description</label>
         <input type="text" {...register("description")} />
-        <small className={styles.error_text}>
-          {errors?.description?.message ?? "\u00A0"}
-        </small>
+        <small className={styles.error_text}>{errors?.description?.message ?? "\u00A0"}</small>
       </div>
       <div className={styles.field}>
         <label>Due Date and Time</label>
-        <input
-          className={errors.dueDate ? styles.input_error : ""}
-          type="datetime-local"
-          {...register("dueDate")}
-        />
-        <small className={styles.error_text}>
-          {errors?.dueDate?.message ?? "\u00A0"}
-        </small>
+        <input className={errors.dueDate ? styles.input_error : ''} type="datetime-local" {...register("dueDate")} />
+        <small className={styles.error_text}>{errors?.dueDate?.message ?? "\u00A0"}</small>
       </div>
       <div className={styles.field}>
-        <button className={styles.createItemButton} type="submit">
-          {mode === "Create" ? "Add Item" : "Edit Item"}
-        </button>
+        <button className={styles.createItemButton} type="submit">{mode === "Create" ? "Add Item" : "Edit Item"}</button>
       </div>
     </form>
   );

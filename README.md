@@ -24,5 +24,8 @@ React | TypeScript | SCSS
 
 ### Change log
 
-03/06/2024 {Bugfix and breaking down components}
+01/06/2024 {Bugfix and breaking down components}
 - Fixed an bug where clicking checkbox was not updating done property and showing linethough list items. 
+
+03/06/2024
+- Modularised List Card component to smaller parts. Added ListItem and Button components.

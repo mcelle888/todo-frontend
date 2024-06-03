@@ -1,0 +1,54 @@
+.done {
+  text-decoration: line-through;
+}
+
+.description {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.itemBox {
+  display: flex;
+  gap: 1rem;
+}
+
+.iconButtons:hover {
+  border-color: black;
+}
+
+.iconButtons {
+  border-width: 2px;
+}
+
+.itemButtons {
+  display: flex;
+  justify-content: space-around;
+  & button {
+    height: 2rem;
+    font-size: 0.7rem;
+  }
+  gap: 1rem;
+  align-self: center;
+}
+
+.checkBox {
+  margin-left: -1rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.dateContainer {
+  margin: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.deleteButton {
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: rgb(180, 104, 104);
+  border-width: 2px;
+  &:hover {
+    border-color: black;
+  }
+}

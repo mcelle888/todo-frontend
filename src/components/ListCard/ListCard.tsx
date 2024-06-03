@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ToDoItem } from "../../services/todo-services";
-import dayjs from "dayjs";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import ListItem from "../ListItem/ListItem";
+import Button from "../Button/Button";
 import styles from "./ListCard.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquarePen } from "@fortawesome/free-solid-svg-icons/faSquarePen";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons/faTrashCan";
 
 interface ListCardProps {
   list: {
@@ -41,55 +43,31 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className={styles.cardHeader}>
         <div className={styles.titleBox}>
           <h3>{list.title}</h3>
-          <button className={styles.iconButtons} onClick={onOpenTitleModal}>
+          <Button className={styles.iconButtons} onClick={onOpenTitleModal}>
             <FontAwesomeIcon icon={faSquarePen} />
-          </button>
+          </Button>
         </div>
-        <button className={styles.deleteButton} onClick={handleDelete}>
+        <Button className={styles.deleteButton} onClick={handleDelete}>
           <FontAwesomeIcon icon={faTrashCan} />
-        </button>
+        </Button>
       </div>
       <ul className={styles.itemList}>
         {items.map((item) => (
-          <li key={item.id} className={item.done ? styles.done : ""}>
-            <div className={styles.itemBox}>
-              <input
-                className={styles.checkBox}
-                type="checkbox"
-                checked={item.done}
-                onChange={() => onToggleDone(item)}
-              />
-              <div>
-                <p>{item.name}:</p>
-                <p className={styles.description}>{item.description}</p>
-                <div className={styles.dateContainer}>
-                  Due: {dayjs(item.dueDate).format("dddd, MMMM D, YYYY h:mm A")}
-                </div>
-              </div>
-            </div>
-            <div className={styles.itemButtons}>
-              <button
-                className={styles.iconButtons}
-                onClick={() => onOpenItemModal(item)}
-              >
-                <FontAwesomeIcon icon={faSquarePen} />
-              </button>
-              <button
-                className={styles.deleteButton}
-                onClick={() => onDeleteItem(item.id)}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-              </button>
-            </div>
-          </li>
+          <ListItem
+            key={item.id}
+            item={item}
+            onToggleDone={onToggleDone}
+            onEditItem={() => onOpenItemModal(item)}
+            onDeleteItem={() => onDeleteItem(item.id)}
+          />
         ))}
       </ul>
-      <button
+      <Button
         className={styles.addItemButton}
         onClick={() => onOpenItemModal(null)}
       >
         Add Item
-      </button>
+      </Button>
     </div>
   );
 };

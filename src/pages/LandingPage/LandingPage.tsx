@@ -18,10 +18,12 @@ import style from "./LandingPage.module.scss";
 
 const LandingPage: React.FC = () => {
   const [lists, setLists] = useState<ToDoList[]>([]);
-  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
-  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
-  const [selectedListId, setSelectedListId] = useState<number | null>(null);
-  const [selectedItem, setSelectedItem] = useState<ToDoItem | null>(null);
+  const [modalState, setModalState] = useState({
+    isItemModalOpen: false,
+    isTitleModalOpen: false,
+    selectedListId: null as number | null,
+    selectedItem: null as ToDoItem | null,
+  });
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -79,20 +81,20 @@ const LandingPage: React.FC = () => {
     data: { name: string; description: string; dueDate: string },
     closeModal: () => void
   ) => {
-    if (selectedListId && selectedItem) {
+    if (modalState.selectedListId && modalState.selectedItem) {
       try {
         const updatedItem = await updateItemInList(
-          selectedListId,
-          selectedItem.id,
+          modalState.selectedListId,
+          modalState.selectedItem.id,
           data
         );
         setLists(
           lists.map((list) =>
-            list.id === selectedListId
+            list.id === modalState.selectedListId
               ? {
                   ...list,
                   items: list.items.map((item) =>
-                    item.id === selectedItem.id ? updatedItem : item
+                    item.id === modalState.selectedItem!.id ? updatedItem : item
                   ),
                 }
               : list
@@ -102,18 +104,18 @@ const LandingPage: React.FC = () => {
       } catch (e) {
         console.error("Failed to update item", e);
       }
-    } else if (selectedListId) {
-      await handleAddItem(selectedListId, data, closeModal);
+    } else if (modalState.selectedListId) {
+      await handleAddItem(modalState.selectedListId, data, closeModal);
     }
   };
 
   const handleDeleteItem = async (itemId: number) => {
-    if (selectedListId) {
+    if (modalState.selectedListId) {
       try {
-        await deleteItemFromList(selectedListId, itemId);
+        await deleteItemFromList(modalState.selectedListId, itemId);
         setLists(
           lists.map((list) =>
-            list.id === selectedListId
+            list.id === modalState.selectedListId
               ? {
                   ...list,
                   items: list.items.filter((item) => item.id !== itemId),
@@ -128,12 +130,15 @@ const LandingPage: React.FC = () => {
   };
 
   const handleUpdateTitle = async (title: string, closeModal: () => void) => {
-    if (selectedListId) {
+    if (modalState.selectedListId) {
       try {
-        const updatedList = await updateListTitle(selectedListId, title);
+        const updatedList = await updateListTitle(
+          modalState.selectedListId,
+          title
+        );
         setLists(
           lists.map((list) =>
-            list.id === selectedListId
+            list.id === modalState.selectedListId
               ? { ...list, title: updatedList.title }
               : list
           )
@@ -167,14 +172,21 @@ const LandingPage: React.FC = () => {
   };
 
   const openItemModal = (listId: number, item: ToDoItem | null) => {
-    setSelectedListId(listId);
-    setSelectedItem(item);
-    setIsItemModalOpen(true);
+    setModalState({
+      isItemModalOpen: true,
+      isTitleModalOpen: false,
+      selectedListId: listId,
+      selectedItem: item,
+    });
   };
 
   const openTitleModal = (listId: number | null, _title: string = "") => {
-    setSelectedListId(listId);
-    setIsTitleModalOpen(true);
+    setModalState({
+      isItemModalOpen: false,
+      isTitleModalOpen: true,
+      selectedListId: listId,
+      selectedItem: null,
+    });
   };
 
   return (
@@ -188,20 +200,23 @@ const LandingPage: React.FC = () => {
 
       {/* modal for creating and editing list titles */}
       <Modal
-        isOpen={isTitleModalOpen}
+        isOpen={modalState.isTitleModalOpen}
         size="medium"
-        onClose={() => setIsTitleModalOpen(false)}
+        onClose={() =>
+          setModalState({ ...modalState, isTitleModalOpen: false })
+        }
       >
         {(closeModal) => (
           <ListForm
-            mode={selectedListId === null ? "Create" : "Edit"}
+            mode={modalState.selectedListId === null ? "Create" : "Edit"}
             defaultTitle={
-              selectedListId === null
+              modalState.selectedListId === null
                 ? ""
-                : lists.find((list) => list.id === selectedListId)?.title || ""
+                : lists.find((list) => list.id === modalState.selectedListId)
+                    ?.title || ""
             }
             onSubmit={(title: string) => {
-              if (selectedListId === null) {
+              if (modalState.selectedListId === null) {
                 handleSubmitList(title, closeModal);
               } else {
                 handleUpdateTitle(title, closeModal);
@@ -214,15 +229,19 @@ const LandingPage: React.FC = () => {
 
       {/* modal for creating and editing items */}
       <Modal
-        isOpen={isItemModalOpen}
+        isOpen={modalState.isItemModalOpen}
         size="small"
-        onClose={() => setIsItemModalOpen(false)}
+        onClose={() => setModalState({ ...modalState, isItemModalOpen: false })}
       >
         {(closeModal) => (
           <ItemForm
-            mode={selectedItem ? "Edit" : "Create"}
+            mode={modalState.selectedItem ? "Edit" : "Create"}
             defaultValues={
-              selectedItem || { name: "", description: "", dueDate: "" }
+              modalState.selectedItem || {
+                name: "",
+                description: "",
+                dueDate: "",
+              }
             }
             onSubmit={(data) => handleUpdateItem(data, closeModal)}
           />
