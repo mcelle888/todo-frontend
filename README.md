@@ -31,5 +31,6 @@ React | TypeScript | SCSS
 03/06/2024 {Changes to state management and testing}
 - Refactored state management in LandingPage (Item modal and List modal state is now managed together)
 
-04/06/2024 {Added testing}
+04/06/2024 {Added testing and finalised styling}
 - Added testing to all components, pages and services using react testing library and vitest
+- Edited some colours and button styling
