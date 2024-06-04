@@ -43,11 +43,17 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className={styles.cardHeader}>
         <div className={styles.titleBox}>
           <h3>{list.title}</h3>
-          <Button className={styles.iconButtons} onClick={onOpenTitleModal}>
+          <Button
+            className={styles.iconButtons}
+            onClick={onOpenTitleModal}
+          >
             <FontAwesomeIcon icon={faSquarePen} />
           </Button>
         </div>
-        <Button className={styles.deleteButton} onClick={handleDelete}>
+        <Button
+          className={styles.deleteButton}
+          onClick={handleDelete}
+        >
           <FontAwesomeIcon icon={faTrashCan} />
         </Button>
       </div>
