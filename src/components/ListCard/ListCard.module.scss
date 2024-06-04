@@ -5,10 +5,10 @@
   min-height: 30rem;
   border: 5px solid white;
   border-radius: 10px;
-  background-color: #e5e5f7;
+  background-color: #F7EDE2;
   opacity: 0.8;
   background-size: 20px 20px;
-  background-image:  repeating-linear-gradient(0deg, #a0a3a7, #9b9bb1 1px, #e5e5f7 1px, #e5e5f7);
+  background-image:  repeating-linear-gradient(0deg, #ced7e2, #9b9bb1 1px, #fad292 1px, #fad292);
   position: relative;
   z-index: 0;
   overflow: visible;
@@ -43,7 +43,6 @@ li {
   margin-top: 2rem;
   &:hover {
     background-color:rgb(112, 142, 150);
-    border-color: black;
   }
 }
 
@@ -68,6 +67,16 @@ p {
   background-color: rgb(180, 104, 104);
   border-width: 2px;
   &:hover {
-    border-color: black;
+    background-color:rgb(206, 33, 33);
   }
+  margin-top: 0.2rem;
+  margin-right: 0.2rem;
+  border-radius: 0;
+}
+
+
+.iconButtons {
+  height: 2.5rem;
+  width: 2.5rem;
+
 }

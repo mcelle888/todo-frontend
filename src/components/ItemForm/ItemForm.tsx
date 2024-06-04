@@ -44,7 +44,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ mode = "Create", defaultValues, onS
       </div>
       <div className={styles.field}>
         <label>Description</label>
-        <input type="text" {...register("description")} />
+        <textarea  {...register("description")} cols={50} rows={10} />
         <small className={styles.error_text}>{errors?.description?.message ?? "\u00A0"}</small>
       </div>
       <div className={styles.field}>

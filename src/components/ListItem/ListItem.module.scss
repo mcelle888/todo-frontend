@@ -12,13 +12,6 @@
   gap: 1rem;
 }
 
-.iconButtons:hover {
-  border-color: black;
-}
-
-.iconButtons {
-  border-width: 2px;
-}
 
 .itemButtons {
   display: flex;
@@ -26,13 +19,13 @@
   & button {
     height: 2rem;
     font-size: 0.7rem;
+    width: 2rem;
   }
   gap: 1rem;
   align-self: center;
 }
 
 .checkBox {
-  margin-left: -1rem;
   &:hover {
     cursor: pointer;
   }
@@ -49,6 +42,6 @@
   background-color: rgb(180, 104, 104);
   border-width: 2px;
   &:hover {
-    border-color: black;
+    background-color: rgb(206, 33, 33);
   }
 }

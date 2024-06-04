@@ -20,7 +20,7 @@ h2 {
 header {
     width: 100vw;
     height: 100%;
-    background-color: rgba(201, 173, 167);
+    background-color: #a7a691;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +33,7 @@ header {
     font-family: 'Faith Hope', sans-serif;
     padding: 1rem;
     & button {
-        background-color: rgba(70, 105, 119, 0.6);
+        background-color: #a7a691;
         color: rgba(242, 233, 228);
         height: 90%;
         align-self: center;
@@ -43,7 +43,7 @@ header {
 
         &:hover {
             cursor: pointer;
-            background-color: rgb(75, 52, 52);
+            background-color: rgb(112, 142, 150);
         }
     }
 
