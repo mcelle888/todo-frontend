@@ -1,5 +1,4 @@
 # To Do App 📝
-![CI](https://github.com/<mcelle888>/<todo-frontend>/actions/workflows/ci.yml/badge.svg)
 
 A simple react to do list application to help organise your tasks for the day!
 
